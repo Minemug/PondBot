@@ -33,33 +33,16 @@ namespace MinigameBot
         int count = 0;        
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            int hWnd = FindWindow(null, "NosTale");
-            //System.Windows.MessageBox.Show($"{ hWnd}");
-            if (hWnd == 0)
-            {
-                System.Windows.MessageBox.Show("Nie znalazłem NosTale");
-
-            }
-            SetForegroundWindow(hWnd);
+            FindTheGame();
             Thread.Sleep(500);
             Bitmap screenshot = Screenshot();
             Screenshot();
-            Color StartGame = screenshot.GetPixel((int)218, 302);
-            if (StartGame.R == 56)
-            {
-                MouseOperations.SetCursorPosition(950, 760);
-                StartGameButtonFound = true;
-                MouseOperations.MouseClick();
-            }
-            else
-            {
-                MessageBox.Show("nie znalazlem przycisku start");
-            }
+            FindStartingButton(screenshot);
             Thread.Sleep(3000);
             while (StartGameButtonFound == true)
-            {               
+            {
                 Bitmap screenshotthegame = Screenshot();
-                Screenshot();               
+                Screenshot();
                 Color Fishleft = screenshotthegame.GetPixel(157, 84);
                 Color Fishdown = screenshotthegame.GetPixel(301, 157);
                 Color Fishup = screenshotthegame.GetPixel(308, 21);
@@ -77,11 +60,11 @@ namespace MinigameBot
                         Thread.Sleep(300);
                     }
                 }
-                trapleft:
+            trapleft:
                 if (Fishdown.R == 198)
                 {
                     Color trapdown = screenshotthegame.GetPixel(285, 164);
-                    if(trapdown.B < 60)
+                    if (trapdown.B < 60)
                     {
                         goto trapdown;
                     }
@@ -90,9 +73,9 @@ namespace MinigameBot
                         SendKeys.SendWait("{DOWN}");
                         Thread.Sleep(300);
                     }
-                    
+
                 }
-                trapdown:
+            trapdown:
                 if (Fishup.R == 198)
                 {
                     Color trapup = screenshotthegame.GetPixel(332, 32);
@@ -106,7 +89,7 @@ namespace MinigameBot
                         Thread.Sleep(300);
                     }
                 }
-                trapup:
+            trapup:
                 if (Fishright.R == 198)
                 {
                     Color trapright = screenshotthegame.GetPixel(485, 96);
@@ -119,25 +102,56 @@ namespace MinigameBot
                         SendKeys.SendWait("{RIGHT}");
                         Thread.Sleep(300);
                     }
-                    
+
                 }
-                trapright:
+            trapright:
                 Color Fishbar = screenshotthegame.GetPixel(24, 112);
                 if (Fishbar.R < 50)
-                {                   
-                        Moveonthebar(screenshotthegame);                
-                }
-                count++;
-                if (count % 20 == 0)
                 {
-                    System.GC.Collect();
-                    System.GC.WaitForPendingFinalizers();
+                    Moveonthebar(screenshotthegame);
                 }
-                
+                CleanProccesMemory();
+
             }
-            
+
         }
-        
+
+        private void CleanProccesMemory()
+        {
+            count++;
+            if (count % 20 == 0)
+            {
+                System.GC.Collect();
+                System.GC.WaitForPendingFinalizers();
+            }
+        }
+
+        private void FindStartingButton(Bitmap screenshot)
+        {
+            Color StartGame = screenshot.GetPixel((int)218, 302);
+            if (StartGame.R == 56)
+            {
+                MouseOperations.SetCursorPosition(950, 760);
+                StartGameButtonFound = true;
+                MouseOperations.MouseClick();
+            }
+            else
+            {
+                MessageBox.Show("nie znalazlem przycisku start");
+            }
+        }
+
+        private static void FindTheGame()
+        {
+            int hWnd = FindWindow(null, "NosTale");
+            if (hWnd == 0)
+            {
+                System.Windows.MessageBox.Show("Nie znalazłem NosTale");
+
+            }
+            SetForegroundWindow(hWnd);
+        }
+
         private void Moveonthebar(Bitmap screenshot)
         {
             int arrdw1x = 105;

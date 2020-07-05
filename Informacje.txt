@@ -1,0 +1,3 @@
+Bot jest przystosowany do konkretnej rozdzielczości ekranu - 1920x1080 i konkretnej rozdzielczości gry.
+Działanie:
+https://youtu.be/b5klGHh4b1Q
